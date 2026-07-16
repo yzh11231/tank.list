@@ -154,7 +154,7 @@
     <div class="panel">
       <h3>🏆 游戏状态</h3>
       <div class="stat-row"><span class="label">得分</span><span class="value highlight" id="scoreDisplay">0</span></div>
-      <div class="stat-row"><span class="label">生命</span><span class="value" id="livesDisplay">♥♥♥</span></div>
+      <div class="stat-row"><span class="label">生命</span><span class="value" id="livesDisplay">♥♥♥♥♥</span></div>
       <div class="stat-row"><span class="label">关卡</span><span class="value" id="levelDisplay">1</span></div>
       <div class="stat-row"><span class="label">敌人剩余</span><span class="value" id="enemiesDisplay">20</span></div>
     </div>
@@ -200,9 +200,9 @@ const MAX_ENEMIES_ON_SCREEN = 4, TOTAL_ENEMIES_PER_LEVEL = 20;
 const T = { EMPTY:0, BRICK:1, STEEL:2, BASE:3 };
 const DIR = { UP:0, RIGHT:1, DOWN:2, LEFT:3 };
 const DX = [0,1,0,-1], DY = [-1,0,1,0];
-let gameState = "idle", score = 0, lives = 3, level = 1;
+let gameState = "idle", score = 0, lives = 5, level = 1;
 let enemies = [], bullets = [], explosions = [], map = [], brickMap = [], player = null;
-let keys = {}, enemiesSpawned = 0, spawnTimer = 0, baseAlive = true;
+let keys = {}, enemiesSpawned = 0, spawnTimer = 0, baseAlive = true, isRespawning = false;
 
 function generateMap() {
   map = Array.from({length:ROWS}, () => Array(COLS).fill(T.EMPTY));
@@ -338,10 +338,10 @@ function spawnEnemy() {
   if(level>4&&Math.random()<0.2) enemy.health=3;
   enemies.push(enemy); enemiesSpawned++; createExplosion(sp.x-5,sp.y-5,50,"#ffffff",20);
 }
-function respawnPlayer() { if(gameState!=="playing")return; lives--; player=new Tank(8*TILE,22*TILE,DIR.UP,true); createExplosion(player.x-5,player.y-5,50,"#4a9eff",20); updateUI(); }
+function respawnPlayer(){ if(gameState!=="playing")return; isRespawning=false; lives--; player=new Tank(8*TILE,22*TILE,DIR.UP,true); createExplosion(player.x-5,player.y-5,50,"#4a9eff",20); updateUI(); }
 function gameOver(reason) { gameState="gameover"; resultTitle.textContent="游戏结束"; resultSub.textContent=reason; finalScore.textContent="最终得分: "+score; gameOverOverlay.className="game-over-overlay show"; gameOverOverlay.classList.remove("win-overlay"); }
 function winLevel() { gameState="paused"; resultTitle.textContent="第 "+level+" 关通过！"; resultSub.textContent="准备进入下一关"; finalScore.textContent="得分: "+score; gameOverOverlay.className="game-over-overlay show win-overlay"; setTimeout(()=>{gameOverOverlay.className="game-over-overlay";level++;startLevel();},2500); }
-function startLevel() { generateMap(); initBrickMap(); player=new Tank(8*TILE,22*TILE,DIR.UP,true); enemies=[]; bullets=[]; explosions=[]; enemiesSpawned=0; spawnTimer=60; baseAlive=true; gameState="playing"; gameOverOverlay.className="game-over-overlay"; updateUI(); }
+function startLevel(){ generateMap(); initBrickMap(); player=new Tank(8*TILE,22*TILE,DIR.UP,true); enemies=[]; bullets=[]; explosions=[]; enemiesSpawned=0; spawnTimer=60; baseAlive=true; isRespawning=false; gameState="playing"; gameOverOverlay.className="game-over-overlay"; updateUI(); }
 
 function drawMap() {
   for(let y=0;y<ROWS;y++) for(let x=0;x<COLS;x++) { const tile=map[y][x], px=x*TILE, py=y*TILE;
@@ -362,7 +362,7 @@ function update() {
   for(const b of bullets) b.update(); bullets=bullets.filter(b=>b.alive); enemies=enemies.filter(e=>e.alive||e.spawnFlash>0);
   const aliveEnemies=enemies.filter(e=>e.alive);
   if(enemiesSpawned>=TOTAL_ENEMIES_PER_LEVEL&&aliveEnemies.length===0&&bullets.filter(b=>!b.isPlayer).length===0) winLevel();
-  if(player&&!player.alive&&lives<=0) gameOver("生命用尽！"); else if(player&&!player.alive) setTimeout(respawnPlayer,1000);
+  if(player&&!player.alive&&lives<=0) gameOver("生命用尽！"); else if(player&&!player.alive&&!isRespawning){isRespawning=true;setTimeout(respawnPlayer,1000);}
   updateExplosions(); updateUI();
 }
 
@@ -376,13 +376,14 @@ function updateUI() { scoreDisplay.textContent=score; let hearts=""; for(let i=0
 function gameLoop(){update();draw();requestAnimationFrame(gameLoop);}
 document.addEventListener("keydown",e=>{ keys[e.key.toLowerCase()]=true; if(e.key===" "||e.key==="Space"){keys[" "]=true;e.preventDefault();} if((e.key==="p"||e.key==="P")&&(gameState==="playing"||gameState==="paused")) gameState=gameState==="playing"?"paused":"playing"; });
 document.addEventListener("keyup",e=>{ keys[e.key.toLowerCase()]=false; if(e.key===" "||e.key==="Space")keys[" "]=false; });
-function init(){level=1;score=0;lives=3;startLevel();}
+function init(){level=1;score=0;lives=5;startLevel();}
 startBtn.addEventListener("click",()=>{init();startBtn.textContent="重新开始";});
 restartOverlayBtn.addEventListener("click",()=>{gameOverOverlay.className="game-over-overlay";init();});
 generateMap(); initBrickMap(); draw(); updateUI(); gameLoop();
 </script>
 </body>
 </html>
+
 
 
 
