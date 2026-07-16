@@ -215,7 +215,7 @@ function generateMap() {
       const wx=bx+dx, wy=by+dy;
       if (wy>=0 && wy<ROWS && wx>=0 && wx<COLS && map[wy][wx]===T.EMPTY) map[wy][wx]=T.BRICK;
     }
-  for (let dy=-1; dy<=1; dy++) map[by+dy][bx+2]=T.EMPTY;
+  map[by+1][bx+2]=T.EMPTY;  // bottom-right entrance
   for (let y=3; y<ROWS-3; y+=2)
     for (let x=3; x<COLS-3; x+=2) {
       if (y>=by-2 && y<=by+1 && x>=bx-2 && x<=bx+3) continue;
@@ -383,6 +383,7 @@ generateMap(); initBrickMap(); draw(); updateUI(); gameLoop();
 </script>
 </body>
 </html>
+
 
 
 
