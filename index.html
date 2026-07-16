@@ -156,7 +156,7 @@
       <div class="stat-row"><span class="label">得分</span><span class="value highlight" id="scoreDisplay">0</span></div>
       <div class="stat-row"><span class="label">生命</span><span class="value" id="livesDisplay">♥♥♥♥♥</span></div>
       <div class="stat-row"><span class="label">关卡</span><span class="value" id="levelDisplay">1</span></div>
-      <div class="stat-row"><span class="label">敌人剩余</span><span class="value" id="enemiesDisplay">20</span></div>
+      <div class="stat-row"><span class="label">敌人剩余</span><span class="value" id="enemiesDisplay">4</span></div>
     </div>
     <div class="panel">
       <h3>🎮 操作</h3>
@@ -174,7 +174,7 @@
       <ul class="controls-list">
         <li>消灭所有敌人坦克过关</li>
         <li>保护基地（⭐）不被摧毁</li>
-        <li>每关有 20 个敌人</li>
+        <li>每关有 4 个敌人</li>
         <li>红色坦克需要 2 发击毁</li>
       </ul>
     </div>
@@ -196,7 +196,7 @@ const finalScore = document.getElementById("finalScore");
 const restartOverlayBtn = document.getElementById("restartOverlayBtn");
 const TILE = 20, COLS = 26, ROWS = 26, TANK_SIZE = 40;
 const BULLET_SIZE = 4, BULLET_SPEED = 2.5, PLAYER_SPEED = 1, ENEMY_SPEED = 0.6;
-const MAX_ENEMIES_ON_SCREEN = 4, TOTAL_ENEMIES_PER_LEVEL = 20;
+const MAX_ENEMIES_ON_SCREEN = 4, TOTAL_ENEMIES_PER_LEVEL = 4;
 const T = { EMPTY:0, BRICK:1, STEEL:2, BASE:3 };
 const DIR = { UP:0, RIGHT:1, DOWN:2, LEFT:3 };
 const DX = [0,1,0,-1], DY = [-1,0,1,0];
@@ -383,6 +383,7 @@ generateMap(); initBrickMap(); draw(); updateUI(); gameLoop();
 </script>
 </body>
 </html>
+
 
 
 
