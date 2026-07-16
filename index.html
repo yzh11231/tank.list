@@ -195,7 +195,7 @@ const resultSub = document.getElementById("resultSub");
 const finalScore = document.getElementById("finalScore");
 const restartOverlayBtn = document.getElementById("restartOverlayBtn");
 const TILE = 20, COLS = 26, ROWS = 26, TANK_SIZE = 40;
-const BULLET_SIZE = 4, BULLET_SPEED = 4, PLAYER_SPEED = 2, ENEMY_SPEED = 1.2;
+const BULLET_SIZE = 4, BULLET_SPEED = 2.5, PLAYER_SPEED = 1, ENEMY_SPEED = 0.6;
 const MAX_ENEMIES_ON_SCREEN = 4, TOTAL_ENEMIES_PER_LEVEL = 20;
 const T = { EMPTY:0, BRICK:1, STEEL:2, BASE:3 };
 const DIR = { UP:0, RIGHT:1, DOWN:2, LEFT:3 };
@@ -383,5 +383,6 @@ generateMap(); initBrickMap(); draw(); updateUI(); gameLoop();
 </script>
 </body>
 </html>
+
 
 
