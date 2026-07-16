@@ -224,7 +224,7 @@ function generateMap() {
       if (ch < 0.35) { if (map[y][x]===T.EMPTY) map[y][x]=T.BRICK; if (y+1<ROWS && map[y+1][x]===T.EMPTY && Math.random()<0.5) map[y+1][x]=T.BRICK; if (x+1<COLS && map[y][x+1]===T.EMPTY && Math.random()<0.5) map[y][x+1]=T.BRICK; }
       if (ch>0.92 && ch<0.97 && map[y][x]===T.EMPTY) map[y][x]=T.STEEL;
     }
-  for (let y=22; y<26; y++) for (let x=8; x<18; x++) if (map[y][x]===T.BRICK) map[y][x]=T.EMPTY;
+  for(let y=21;y<25;y++) for(let x=7;x<11;x++) if(map[y][x]===T.BRICK||map[y][x]===T.STEEL) map[y][x]=T.EMPTY;
   for (let x=1; x<=4; x++) { map[1][x]=T.EMPTY; map[2][x]=T.EMPTY; }
   for (let x=11; x<=14; x++) { map[1][x]=T.EMPTY; map[2][x]=T.EMPTY; }
   for (let x=21; x<=24; x++) { map[1][x]=T.EMPTY; map[2][x]=T.EMPTY; }
@@ -338,16 +338,16 @@ function spawnEnemy() {
   if(level>4&&Math.random()<0.2) enemy.health=3;
   enemies.push(enemy); enemiesSpawned++; createExplosion(sp.x-5,sp.y-5,50,"#ffffff",20);
 }
-function respawnPlayer() { if(gameState!=="playing")return; lives--; player=new Tank(8*TILE,24*TILE,DIR.UP,true); createExplosion(player.x-5,player.y-5,50,"#4a9eff",20); updateUI(); }
+function respawnPlayer() { if(gameState!=="playing")return; lives--; player=new Tank(8*TILE,22*TILE,DIR.UP,true); createExplosion(player.x-5,player.y-5,50,"#4a9eff",20); updateUI(); }
 function gameOver(reason) { gameState="gameover"; resultTitle.textContent="游戏结束"; resultSub.textContent=reason; finalScore.textContent="最终得分: "+score; gameOverOverlay.className="game-over-overlay show"; gameOverOverlay.classList.remove("win-overlay"); }
 function winLevel() { gameState="paused"; resultTitle.textContent="第 "+level+" 关通过！"; resultSub.textContent="准备进入下一关"; finalScore.textContent="得分: "+score; gameOverOverlay.className="game-over-overlay show win-overlay"; setTimeout(()=>{gameOverOverlay.className="game-over-overlay";level++;startLevel();},2500); }
-function startLevel() { generateMap(); initBrickMap(); player=new Tank(8*TILE,24*TILE,DIR.UP,true); enemies=[]; bullets=[]; explosions=[]; enemiesSpawned=0; spawnTimer=60; baseAlive=true; gameState="playing"; gameOverOverlay.className="game-over-overlay"; updateUI(); }
+function startLevel() { generateMap(); initBrickMap(); player=new Tank(8*TILE,22*TILE,DIR.UP,true); enemies=[]; bullets=[]; explosions=[]; enemiesSpawned=0; spawnTimer=60; baseAlive=true; gameState="playing"; gameOverOverlay.className="game-over-overlay"; updateUI(); }
 
 function drawMap() {
   for(let y=0;y<ROWS;y++) for(let x=0;x<COLS;x++) { const tile=map[y][x], px=x*TILE, py=y*TILE;
     if(tile===T.BRICK) { for(let sy=0;sy<2;sy++) for(let sx=0;sx<2;sx++) { const btx=x*2+sx, bty=y*2+sy; if(!brickMap[bty]||!brickMap[bty][btx]) continue; ctx.fillStyle=(sx+sy)%2===0?"#cc6633":"#b8552a"; ctx.fillRect(px+sx*10,py+sy*10,10,10); ctx.strokeStyle="#8b4513"; ctx.lineWidth=0.5; ctx.strokeRect(px+sx*10,py+sy*10,10,10); } }
     else if(tile===T.STEEL) { ctx.fillStyle="#888"; ctx.fillRect(px,py,TILE,TILE); ctx.fillStyle="#aaa"; ctx.fillRect(px+2,py+2,TILE-4,TILE-4); ctx.fillStyle="#999"; ctx.fillRect(px+4,py+4,TILE-8,TILE-8); ctx.fillStyle="#777"; for(const[rx,ry] of [[3,3],[3,TILE-5],[TILE-5,3],[TILE-5,TILE-5]]){ctx.beginPath();ctx.arc(px+rx,py+ry,2,0,Math.PI*2);ctx.fill();} }
-    else if(tile===T.BASE) { ctx.fillStyle="#333"; ctx.fillRect(px,py,TILE*2,TILE*2); ctx.fillStyle=baseAlive?"#ffdd44":"#666"; ctx.font="22px Arial"; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText("⭐",px+TILE,py+TILE); }
+    else if(tile===T.BASE) { if(x===0||map[y][x-1]!==T.BASE){ctx.fillStyle="#333"; ctx.fillRect(px,py,TILE*2,TILE*2); ctx.fillStyle=baseAlive?"#ffdd44":"#666"; ctx.font="22px Arial"; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText("⭐",px+TILE,py+TILE);} }
   }
   ctx.strokeStyle="rgba(255,255,255,0.03)"; ctx.lineWidth=0.5;
   for(let i=0;i<=COLS;i++){ctx.beginPath();ctx.moveTo(i*TILE,0);ctx.lineTo(i*TILE,canvas.height);ctx.stroke();}
@@ -383,3 +383,5 @@ generateMap(); initBrickMap(); draw(); updateUI(); gameLoop();
 </script>
 </body>
 </html>
+
+
